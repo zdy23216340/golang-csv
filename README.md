@@ -1,5 +1,10 @@
 ## CSV handler For golang.
 
+## Install
+```
+go get github.com/zdy23216340/golang-csv
+```
+
 ## Usage
 ### Is very simple.
 
