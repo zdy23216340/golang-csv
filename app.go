@@ -18,7 +18,7 @@ type ReadCsv struct {
 	Row   [][]string
 }
 
-func New() Csv {
+func New() *Csv {
 	return &Csv{Len: 0, Content: ""}
 }
 
@@ -27,7 +27,7 @@ func Read(path string) (*ReadCsv, error) {
 	fi, err := os.Open(path)
 
 	if err != nil {
-		return _, err
+		return nil, err
 	}
 
 	newCsv := &ReadCsv{Title: []string{}, Row: [][]string{}}
@@ -36,14 +36,13 @@ func Read(path string) (*ReadCsv, error) {
 
 	br := bufio.NewReader(fi)
 
-	isFirstLine = true
+	isFirstLine := true
 
 	for {
 		a, _, c := br.ReadLine()
 		if c == io.EOF {
 			break
 		}
-		fmt.Println(c)
 
 		line := strings.Split(string(a), ",")
 
@@ -56,7 +55,7 @@ func Read(path string) (*ReadCsv, error) {
 		isFirstLine = false
 	}
 
-	return newCsv, _
+	return newCsv, nil
 }
 
 func (c *Csv) WriteTitle(s []string) *Csv {
@@ -69,8 +68,6 @@ func (c *Csv) WriteTitle(s []string) *Csv {
 }
 
 func (c *Csv) WriteRow(s []string) *Csv {
-
-	dis := len(s) - c.Len
 
 	c.Content += strings.Join(s, ",")
 	c.Content += "\n"
@@ -86,6 +83,6 @@ func (c *Csv) Byte() []byte {
 }
 
 func (c *Csv) ToFile(path string) {
-	buffer := c.Byte(0754)
-	ioutil.WriteFile(path, buffer)
+	buffer := c.Byte()
+	ioutil.WriteFile(path, buffer, 0754)
 }
